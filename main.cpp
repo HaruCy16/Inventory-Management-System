@@ -114,19 +114,22 @@ int main(){
                 // Call displayInventory function
                 break;
             case 5:
-                cout << "Are you sure you want to exit? (Y/N)"<< endl;
-                char exitChoice;
+            char exitChoice;
+            do {
+                cout << "Are you sure you want to exit? (Y/N): ";
                 cin >> exitChoice;
-                if (exitChoice == 'Y' || exitChoice == 'y'){
+        
+                if (exitChoice == 'Y' || exitChoice == 'y') {
                     cout << "Thank you for using the Inventory System. Goodbye!" << endl;
                     return 0;
-                } else if (exitChoice == 'N' || exitChoice == 'n'){
+                } else if (exitChoice == 'N' || exitChoice == 'n') {
                     cout << "Returning to the main menu..." << endl;
+                    break;
                 } else {
-                    cout << "Invalid Input! Program Terminated."<< endl;
-                    return 0;
+                    cout << "Invalid Input! Please enter Y or N.\n";
                 }
-                break;
+            } while (true);
+            break;
             default:
                 cout << "Invalid Input! Program Terminated."<< endl;
                 return 0;
