@@ -113,17 +113,6 @@ void updateProduct(Product product, Inventory inventory){
     cin >> productPrice;
 }
 
-// //Function to display the inventory
-// void displayInventory(){
-//     cout << "**************************************************" << endl;
-//     cout << "                 Product Details:                 " << endl;
-//     cout << "**************************************************" << endl;
-//     cout << "Product Name     | Quantity      | Price          " << endl;
-//     cout << "--------------------------------------------------" << endl;
-
-//     cout << 
-// }
-
 void saveToFile(Inventory &inventory) {
     ofstream file("inventory.txt");
     for (int i = 0; i < inventory.getCount(); i++) {
@@ -147,7 +136,6 @@ void loadFromFile(Inventory &inventory) {
 
     file.close();
 }
-
 
 int main(){
     //User Introduction
