@@ -15,7 +15,6 @@ using namespace std;
     Load Inventory from File
 */
 
-//Product class to represent each product in the inventory
 // Product class (stores product details)
 class Product {
     private:
@@ -113,6 +112,7 @@ void updateProduct(Product product, Inventory inventory){
     cin >> productPrice;
 }
 
+//STILL ON GOING AND TESTING
 void saveToFile(Inventory &inventory) {
     ofstream file("inventory.txt");
     for (int i = 0; i < inventory.getCount(); i++) {
@@ -186,7 +186,7 @@ int main(){
                 cout << "Product added successfully!\n" << endl;
                 break;
             case 2:
-                // Call updateProduct function
+                // 
                 break;
             case 3:
                 // Call deleteProduct function
@@ -202,6 +202,7 @@ int main(){
 
                 cin.ignore(1000,'\n');
         
+                
                 if (exitChoice == 'Y' || exitChoice == 'y') {
                     cout << "\nThank you for using the Inventory System." << endl;
                     return 0;
