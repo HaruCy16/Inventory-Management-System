@@ -68,6 +68,21 @@ class Inventory {
                      << products[i].getProductPrice() << endl;
             }
         }
+
+        //Delete product logic
+        bool removeProductByName(string productName) {
+            for (int i = 0; i < count; i++) {
+                if (products[i].getProductName() == productName) {
+                    // Shift the rest of the array left
+                    for (int j = i; j < count - 1; j++) {
+                        products[j] = products[j + 1];
+                    }
+                    count--; // Reduce the product count
+                    return true; // Deletion successful
+                }
+            }
+            return false; // Product not found
+        }
     
         int getCount() {
             return count;
@@ -110,6 +125,22 @@ void updateProduct(Product product, Inventory inventory){
     cin >> productQuantity;
     cout << "Enter new product price (for" << productName << "): ";
     cin >> productPrice;
+}
+//Function to delete product from the inventory
+void deleteProduct(Inventory &inventory) {
+    cout << "**************************************************" << endl;
+    cout << "                 Deleting Product                 " << endl;
+    cout << "**************************************************" << endl;
+
+    string productName;
+    cout << "Enter product name to delete: ";
+    cin >> productName;
+
+    if (inventory.removeProductByName(productName)) {
+        cout << "Product '" << productName << "' deleted successfully." << endl;
+    } else {
+        cout << "Product '" << productName << "' not found in inventory." << endl;
+    }
 }
 
 //STILL ON GOING AND TESTING
@@ -186,10 +217,10 @@ int main(){
                 cout << "Product added successfully!\n" << endl;
                 break;
             case 2:
-                // 
+                // UPDATE PRODUCT
                 break;
             case 3:
-                // Call deleteProduct function
+                deleteProduct(inventory);
                 break;
             case 4:
                 inventory.displayInventory();
