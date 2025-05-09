@@ -40,6 +40,11 @@ class Product {
         double getProductPrice() {
             return price;
         }
+
+        //Setters for update product
+        void setQuantity(int q) { quantity = q; }
+        void setPrice(double p) { price = p; }
+
 };
 
 const int MAXIMUM_PRODUCTS_TO_STORE = 100; // Maximum number of products in the inventory
@@ -110,6 +115,7 @@ void addProduct(Inventory &inventory) {
     p.setProductInformation(name, price, quantity);
     inventory.addProduct(p);
 }
+
 //Function to update product in the inventory
 void updateProduct(Product product, Inventory inventory){
     cout << "**************************************************" << endl;
@@ -121,11 +127,23 @@ void updateProduct(Product product, Inventory inventory){
     int productQuantity;
     cout << "Enter product name: ";
     cin >> productName;
-    cout << "Enter new product quantity (for" << productName << "): ";
-    cin >> productQuantity;
-    cout << "Enter new product price (for" << productName << "): ";
-    cin >> productPrice;
+
+    // bool productFound = false;
+    for (int i = 0; i < inventory.getCount(); i++) {
+        if (inventory.getProduct(i).getProductName() == productName) {
+            cout << "Enter new product quantity: ";
+            cin >> productQuantity;
+            cout << "Enter new product price: ";
+            cin >> productPrice;
+
+            product.setProductInformation(productName, productPrice, productQuantity);
+            inventory.addProduct(product);
+            // productFound = true;
+            break;
+        }
+    }
 }
+
 //Function to delete product from the inventory
 void deleteProduct(Inventory &inventory) {
     cout << "**************************************************" << endl;
@@ -217,7 +235,8 @@ int main(){
                 cout << "Product added successfully!\n" << endl;
                 break;
             case 2:
-                // UPDATE PRODUCT
+                updateProduct(inventory.getProduct(0), inventory); // Update the first product for demonstration
+                cout << "Product updated successfully!\n" << endl;
                 break;
             case 3:
                 deleteProduct(inventory);
