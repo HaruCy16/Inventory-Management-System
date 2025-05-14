@@ -10,8 +10,6 @@ using namespace std;
     Delete Product
     Display Inventory
     Exit Program
-    Save Inventory to File
-    Load Inventory from File
 */
 
 // Product class (stores product details)
@@ -76,17 +74,6 @@ class Inventory {
             } else {
                 cout << "No products in inventory." << endl;
             }
-
-            // cout << "Product Name     | Quantity      | Price          " << endl;
-            // for (int i = 0; i < count; i++) {
-            //     cout << products[i].getProductName() << "            | " 
-            //          << products[i].getProductQuantity() << "        | " 
-            //          << products[i].getProductPrice() << endl;
-            // }
-            // if (count == 0) {
-            //     cout << "No products in inventory." << endl;
-            // }
-            // if ()
         }
 
         //Delete product logic
@@ -120,16 +107,15 @@ void addProduct(Inventory &inventory) {
     int quantity;
 
     cout << "Enter product name: ";
-    cin >> name;
+    cin.ignore(1000,'\n');
     getline(cin, name);
 
     cout << "Enter product quantity (for " << name << "): ";
     cin >> quantity;
-    cin.ignore(1000,'\n');
 
     cout << "Enter product price (for " << name << "): ";
     cin >> price;
-    cin.ignore(1000,'\n');
+
 
     Product p;
     p.setProductInformation(name, price, quantity);
@@ -150,6 +136,7 @@ void updateProduct(Product product, Inventory inventory){
 
     for (int i = 0; i < inventory.getCount(); i++) {
         if (inventory.getProduct(i).getProductName() == productName) {
+
             cout << "Enter new product quantity: ";
             cin >> productQuantity;
             cout << "Enter new product price: ";
@@ -171,8 +158,10 @@ void deleteProduct(Inventory &inventory) {
     cout << "**************************************************" << endl;
 
     string productName;
+
+    cin.ignore(1000,'\n');
     cout << "Enter product name to delete: ";
-    cin >> productName;
+    getline(cin, productName);
 
     if (inventory.removeProductByName(productName)) {
         cout << "Product '" << productName << "' deleted successfully." << endl;
@@ -187,9 +176,7 @@ int main(){
     int courtesyTitleChoice;
 
     cout << "Enter your name: ";
-    cin >> personName;
     getline(cin, personName);
-    // cin.ignore(1000,'\n');
 
     cout << "Hi " << personName << ", what is your courtesy title?" << endl;
     cout << "    [1] Mr." << endl;
@@ -198,9 +185,9 @@ int main(){
     cin >> courtesyTitleChoice;
 
     if (courtesyTitleChoice == 1){
-        cout << "\nHello, Mr. " << personName << "! Welcome to the Inventory System"<< endl;
+        cout << "\nHello, Mr. " << personName << "! Welcome to the Inventory System\n"<< endl;
     } else if (courtesyTitleChoice == 2){
-        cout << "\nHello, Ms. " << personName << "! Welcome to the Inventory System" << endl;
+        cout << "\nHello, Ms. " << personName << "! Welcome to the Inventory System\n" << endl;
     } else {
         cout << "Invalid Input! Program Terminated." << endl;
         return 0;
@@ -226,6 +213,7 @@ int main(){
             cout << "Ms. " << personName << ", please enter the number of your choice: ";
         }
         cin >> inventoryChoice;
+        cout << endl;
 
         switch (inventoryChoice){
             case 1:
