@@ -56,25 +56,41 @@ class Inventory {
             if (count < MAXIMUM_PRODUCTS_TO_STORE) {
                 products[count] = p;
                 count++;
+            } else {
+                cout << "Inventory is full. Cannot add more products." << endl;
+                return;
             }
         }
     
         void displayInventory() {
-            cout << "**************************************************" << endl;
-            cout << "                 Product Details:                 " << endl;
-            cout << "**************************************************" << endl;
-
             if(count >= 1){
+                cout << "**************************************************" << endl;
+                cout << "                 Product Details:                 " << endl;
+                cout << "**************************************************" << endl;
+
                 cout << "Product Name     | Quantity      | Price          " << endl;
                 for (int i = 0; i < count; i++) {
                     cout << products[i].getProductName() << "            | " 
                         << products[i].getProductQuantity() << "        | " 
-                        << products[i].getProductPrice() << endl;
+                        << products[i].getProductPrice() << "\n";
                 }
             } else {
-                cout << "No products in inventory." << endl;
+                cout << "Inventory is empty!\n";
             }
         }
+
+        //Update product logic
+        bool updateProductByName( string &name, int newQuantity, double newPrice) {
+            for (int i = 0; i < count; i++) {
+                if (products[i].getProductName() == name) {
+                    products[i].setQuantity(newQuantity);
+                    products[i].setPrice(newPrice);
+                    return true; // success
+                }
+            }
+            return false; // product not found
+        }
+
 
         //Delete product logic
         bool removeProductByName(string productName) {
@@ -106,9 +122,21 @@ void addProduct(Inventory &inventory) {
     double price;
     int quantity;
 
+    cout << "**************************************************" << endl;
+    cout << "                 Adding Product                  " << endl;
+    cout << "**************************************************" << endl;
+
     cout << "Enter product name: ";
     cin.ignore(1000,'\n');
     getline(cin, name);
+
+    //Check product existence
+    for (int i = 0; i < inventory.getCount(); i++) {
+        if (inventory.getProduct(i).getProductName() == name) {
+            cout << "\nProduct already exists in inventory.\n";
+            return;
+        }
+    }
 
     cout << "Enter product quantity (for " << name << "): ";
     cin >> quantity;
@@ -120,36 +148,43 @@ void addProduct(Inventory &inventory) {
     Product p;
     p.setProductInformation(name, price, quantity);
     inventory.addProduct(p);
-}
 
-//Function to update product in the inventory
-void updateProduct(Product product, Inventory inventory){
-    cout << "**************************************************" << endl;
-    cout << "                 Updating Product                 " << endl;
-    cout << "**************************************************" << endl;
-
-    string productName;
-    double productPrice;
-    int productQuantity;
-    cout << "Enter product name: ";
-    cin >> productName;
-
-    for (int i = 0; i < inventory.getCount(); i++) {
-        if (inventory.getProduct(i).getProductName() == productName) {
-
-            cout << "Enter new product quantity: ";
-            cin >> productQuantity;
-            cout << "Enter new product price: ";
-            cin >> productPrice;
-
-            product.setProductInformation(productName, productPrice, productQuantity);
-            inventory.addProduct(product);
-            break;
-        } else {
-            cout << "Product '" << productName << "' not found in inventory." << endl;
-        }
+    //Input checker for quantity and price
+    if (quantity < 0) {
+        cout << "Invalid quantity! Quantity cannot be negative.\n" << endl;
+        return;
+    } else if (price < 0) {
+        cout << "Invalid price! Price cannot be negative.\n" << endl;
+        return;
+    } else {
+        cout << "\nProduct added successfully!\n" << endl;
     }
 }
+
+//UPDATE PRODUCT FUNCTION
+void updateProduct(Inventory &inventory) {
+    cin.ignore(1000, '\n'); // Clean buffer
+
+    string productName;
+    cout << "Enter the full product name to update: ";
+    getline(cin, productName);
+
+    int newQuantity;
+    double newPrice;
+
+    if (inventory.updateProductByName(productName, newQuantity, newPrice)) {
+        cout << "Enter new quantity for '" << productName << "': ";
+        cin >> newQuantity;
+
+        cout << "Enter new price for '" << productName << "': ";
+        cin >> newPrice;
+
+        cout << "Product '" << productName << "' updated successfully.\n";
+    } else {
+        cout << "Product not found!\n";
+    }
+}
+
 
 //Function to delete product from the inventory
 void deleteProduct(Inventory &inventory) {
@@ -164,9 +199,9 @@ void deleteProduct(Inventory &inventory) {
     getline(cin, productName);
 
     if (inventory.removeProductByName(productName)) {
-        cout << "Product '" << productName << "' deleted successfully." << endl;
+        cout << "Product deleted successfully." << endl;
     } else {
-        cout << "Product '" << productName << "' not found in inventory." << endl;
+        cout << "Product not found!\n" << endl; //ERROR HANDLING
     }
 }
 
@@ -209,20 +244,19 @@ int main(){
 
         if(courtesyTitleChoice == 1){
             cout << "Mr. " << personName << ", please enter the number of your choice: ";
-        } else{
+        } else {
             cout << "Ms. " << personName << ", please enter the number of your choice: ";
         }
+
         cin >> inventoryChoice;
         cout << endl;
 
         switch (inventoryChoice){
             case 1:
                 addProduct(inventory);
-                cout << "Product added successfully!\n" << endl;
                 break;
             case 2:
-                updateProduct(inventory.getProduct(0), inventory); // Update the first product for demonstration
-                cout << "Product updated successfully!\n" << endl;
+                updateProduct(inventory);
                 break;
             case 3:
                 deleteProduct(inventory);
