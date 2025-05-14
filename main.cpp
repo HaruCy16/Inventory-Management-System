@@ -1,5 +1,5 @@
 #include <iostream>
-#include <fstream>
+#include <string>
 using namespace std;
 
 /*
@@ -9,7 +9,6 @@ using namespace std;
     Update Product
     Delete Product
     Display Inventory
-    Search Product
     Exit Program
     Save Inventory to File
     Load Inventory from File
@@ -40,6 +39,11 @@ class Product {
         double getProductPrice() {
             return price;
         }
+
+        //Setters for update product
+        void setQuantity(int q) { quantity = q; }
+        void setPrice(double p) { price = p; }
+
 };
 
 const int MAXIMUM_PRODUCTS_TO_STORE = 100; // Maximum number of products in the inventory
@@ -61,12 +65,28 @@ class Inventory {
             cout << "**************************************************" << endl;
             cout << "                 Product Details:                 " << endl;
             cout << "**************************************************" << endl;
-            cout << "Product Name     | Quantity      | Price          " << endl;
-            for (int i = 0; i < count; i++) {
-                cout << products[i].getProductName() << "            | " 
-                     << products[i].getProductQuantity() << "        | " 
-                     << products[i].getProductPrice() << endl;
+
+            if(count >= 1){
+                cout << "Product Name     | Quantity      | Price          " << endl;
+                for (int i = 0; i < count; i++) {
+                    cout << products[i].getProductName() << "            | " 
+                        << products[i].getProductQuantity() << "        | " 
+                        << products[i].getProductPrice() << endl;
+                }
+            } else {
+                cout << "No products in inventory." << endl;
             }
+
+            // cout << "Product Name     | Quantity      | Price          " << endl;
+            // for (int i = 0; i < count; i++) {
+            //     cout << products[i].getProductName() << "            | " 
+            //          << products[i].getProductQuantity() << "        | " 
+            //          << products[i].getProductPrice() << endl;
+            // }
+            // if (count == 0) {
+            //     cout << "No products in inventory." << endl;
+            // }
+            // if ()
         }
 
         //Delete product logic
@@ -101,15 +121,21 @@ void addProduct(Inventory &inventory) {
 
     cout << "Enter product name: ";
     cin >> name;
+    getline(cin, name);
+
     cout << "Enter product quantity (for " << name << "): ";
     cin >> quantity;
+    cin.ignore(1000,'\n');
+
     cout << "Enter product price (for " << name << "): ";
     cin >> price;
+    cin.ignore(1000,'\n');
 
     Product p;
     p.setProductInformation(name, price, quantity);
     inventory.addProduct(p);
 }
+
 //Function to update product in the inventory
 void updateProduct(Product product, Inventory inventory){
     cout << "**************************************************" << endl;
@@ -121,11 +147,23 @@ void updateProduct(Product product, Inventory inventory){
     int productQuantity;
     cout << "Enter product name: ";
     cin >> productName;
-    cout << "Enter new product quantity (for" << productName << "): ";
-    cin >> productQuantity;
-    cout << "Enter new product price (for" << productName << "): ";
-    cin >> productPrice;
+
+    for (int i = 0; i < inventory.getCount(); i++) {
+        if (inventory.getProduct(i).getProductName() == productName) {
+            cout << "Enter new product quantity: ";
+            cin >> productQuantity;
+            cout << "Enter new product price: ";
+            cin >> productPrice;
+
+            product.setProductInformation(productName, productPrice, productQuantity);
+            inventory.addProduct(product);
+            break;
+        } else {
+            cout << "Product '" << productName << "' not found in inventory." << endl;
+        }
+    }
 }
+
 //Function to delete product from the inventory
 void deleteProduct(Inventory &inventory) {
     cout << "**************************************************" << endl;
@@ -143,31 +181,6 @@ void deleteProduct(Inventory &inventory) {
     }
 }
 
-//STILL ON GOING AND TESTING
-void saveToFile(Inventory &inventory) {
-    ofstream file("inventory.txt");
-    for (int i = 0; i < inventory.getCount(); i++) {
-        Product p = inventory.getProduct(i);
-        file << p.getProductName() << " " << p.getProductQuantity() << " " << p.getProductPrice() << endl;
-    }
-    file.close();
-}
-
-void loadFromFile(Inventory &inventory) {
-    ifstream file("inventory.txt");
-    string name;
-    int quantity;
-    double price;
-
-    while (file >> name >> quantity >> price) {
-        Product p;
-        p.setProductInformation(name, price, quantity);
-        inventory.addProduct(p);
-    }
-
-    file.close();
-}
-
 int main(){
     //User Introduction
     string personName;
@@ -175,6 +188,9 @@ int main(){
 
     cout << "Enter your name: ";
     cin >> personName;
+    getline(cin, personName);
+    // cin.ignore(1000,'\n');
+
     cout << "Hi " << personName << ", what is your courtesy title?" << endl;
     cout << "    [1] Mr." << endl;
     cout << "    [2] Ms." << endl;
@@ -182,9 +198,9 @@ int main(){
     cin >> courtesyTitleChoice;
 
     if (courtesyTitleChoice == 1){
-        cout << "Hello, Mr. " << personName << "! Welcome to the Inventory System"<< endl;
+        cout << "\nHello, Mr. " << personName << "! Welcome to the Inventory System"<< endl;
     } else if (courtesyTitleChoice == 2){
-        cout << "Welcome Ms. " << personName << "! Welcome to the Inventory System" << endl;
+        cout << "\nHello, Ms. " << personName << "! Welcome to the Inventory System" << endl;
     } else {
         cout << "Invalid Input! Program Terminated." << endl;
         return 0;
@@ -217,7 +233,8 @@ int main(){
                 cout << "Product added successfully!\n" << endl;
                 break;
             case 2:
-                // UPDATE PRODUCT
+                updateProduct(inventory.getProduct(0), inventory); // Update the first product for demonstration
+                cout << "Product updated successfully!\n" << endl;
                 break;
             case 3:
                 deleteProduct(inventory);
@@ -232,7 +249,6 @@ int main(){
                 cin >> exitChoice;
 
                 cin.ignore(1000,'\n');
-        
                 
                 if (exitChoice == 'Y' || exitChoice == 'y') {
                     cout << "\nThank you for using the Inventory System." << endl;
@@ -249,7 +265,7 @@ int main(){
                 cout << "Invalid Input! Program Terminated."<< endl;
                 return 0;
         }
-    } while (inventoryChoice != 6);
+    } while (true);
     
     return 0;
 }
