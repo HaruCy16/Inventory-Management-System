@@ -72,10 +72,10 @@ class Inventory {
                 for (int i = 0; i < count; i++) {
                     cout << products[i].getProductName() << "            | " 
                         << products[i].getProductQuantity() << "        | " 
-                        << products[i].getProductPrice() << "\n";
+                        << products[i].getProductPrice() << "\n" << endl;
                 }
             } else {
-                cout << "Inventory is empty!\n";
+                cout << "Inventory is empty!\n" << endl;
             }
         }
 
@@ -91,6 +91,15 @@ class Inventory {
             return false; // product not found
         }
 
+        //FIND PRODUCT FOR UPDATE LOGIC
+        int findProductIndexByName(const string &name) {
+            for (int i = 0; i < count; i++) {
+                if (products[i].getProductName() == name) {
+                    return i; //
+                }
+            }
+            return -1; // 
+        }
 
         //Delete product logic
         bool removeProductByName(string productName) {
@@ -111,7 +120,7 @@ class Inventory {
             return count;
         }
     
-        Product getProduct(int index) {
+        Product& getProduct(int index) {
             return products[index];
         }
 };
@@ -161,30 +170,41 @@ void addProduct(Inventory &inventory) {
     }
 }
 
-//UPDATE PRODUCT FUNCTION
 void updateProduct(Inventory &inventory) {
     cin.ignore(1000, '\n'); // Clean buffer
+
+    cout << "**************************************************" << endl;
+    cout << "                 Updating Product                 " << endl;
+    cout << "**************************************************" << endl;
 
     string productName;
     cout << "Enter the full product name to update: ";
     getline(cin, productName);
 
+    // First, check if the product exists
+    int index = inventory.findProductIndexByName(productName);
+    if (index == -1) {
+        cout << "Product not found in inventory.\n" << endl;
+        return;
+    }
+
+    // Only ask for new values if product exists
     int newQuantity;
     double newPrice;
 
-    if (inventory.updateProductByName(productName, newQuantity, newPrice)) {
-        cout << "Enter new quantity for '" << productName << "': ";
-        cin >> newQuantity;
+    cout << "Enter new quantity for '" << productName << "': ";
+    cin >> newQuantity;
 
-        cout << "Enter new price for '" << productName << "': ";
-        cin >> newPrice;
+    cout << "Enter new price for '" << productName << "': ";
+    cin >> newPrice;
 
-        cout << "Product '" << productName << "' updated successfully.\n";
-    } else {
-        cout << "Product not found!\n";
-    }
+    // Update using the correct product index
+    Product &p = inventory.getProduct(index);
+    p.setQuantity(newQuantity);
+    p.setPrice(newPrice);
+
+    cout << "Product updated successfully.\n" << endl;
 }
-
 
 //Function to delete product from the inventory
 void deleteProduct(Inventory &inventory) {
