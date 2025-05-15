@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
 #include <iomanip>
 using namespace std;
 
@@ -12,11 +13,43 @@ using namespace std;
     Display Inventory
     Exit Program
 
-    CLASSES - ENCAPSULATION
-    CONDITIONAL
-    INPUT OUTPUT
+    MGA TINURO;
+    CLASSES - ENCAPSULATION - Access modifiers
+    CONDITIONAL STATEMENT
+    INPUT AND OUTPUT
     FUNCTIONS
+    LOOPING
+
+    HINDI/OWN DISCOVERY;
+    algorithm library
+    string library
+    toLowerCase
+    trim - for leading and trailing spaces mula sa string
+    cin ignore
+
 */
+
+//CONVERT, TRIM AND COMPARE STRINGS LOGIC
+
+// Converts string to lowercase
+string toLowerCase(const string &s) {
+    string result = s;
+    transform(result.begin(), result.end(), result.begin(), ::tolower);
+    return result;
+}
+
+// Trims leading/trailing spaces
+string trim(const string &s) {
+    size_t start = s.find_first_not_of(" \t\n\r");
+    size_t end = s.find_last_not_of(" \t\n\r");
+    return (start == string::npos) ? "" : s.substr(start, end - start + 1);
+}
+
+// Unified name comparison logic
+bool isSameProductName(const string &a, const string &b) {
+    return toLowerCase(trim(a)) == toLowerCase(trim(b));
+}
+
 
 // Product class (stores product details)
 class Product {
@@ -73,12 +106,12 @@ class Inventory {
                 cout << "                 Product Details:                 " << endl;
                 cout << "**************************************************" << endl;
 
-                cout << left << setw(15) << "Product Name" << "|" << setw(15) << "Price" << "|" << setw(10) << "Quantity" << endl;
+                cout << left << setw(15) << "Product Name" << "|" << setw(15) << "Quantity" << "|" << setw(10) << "Price" << endl;
                 cout << "--------------------------------------------------------" << endl;
                 for (int i = 0; i < count;i++){
                     cout << left << setw(15) << products[i].getProductName() << "|" 
-                         << setw(15) << products[i].getProductPrice() << "|" 
-                         << setw(10) << products[i].getProductQuantity() << "\n" << endl;
+                         << setw(15) << products[i].getProductQuantity() << "|" 
+                         << setw(10) << products[i].getProductPrice() << "\n" << endl;
                 }
             } else {
                 cout << "Inventory is empty!\n" << endl;
@@ -86,9 +119,9 @@ class Inventory {
         }
 
         //Update product logic
-        bool updateProductByName( string &name, int newQuantity, double newPrice) {
+        bool updateProductByName(string &name, int newQuantity, double newPrice) {
             for (int i = 0; i < count; i++) {
-                if (products[i].getProductName() == name) {
+                if (isSameProductName(products[i].getProductName(), name)) {
                     products[i].setQuantity(newQuantity);
                     products[i].setPrice(newPrice);
                     return true; // success
@@ -97,20 +130,21 @@ class Inventory {
             return false; // product not found
         }
 
+
         //FIND PRODUCT FOR UPDATE LOGIC
         int findProductIndexByName(const string &name) {
             for (int i = 0; i < count; i++) {
-                if (products[i].getProductName() == name) {
-                    return i; //
+                if (isSameProductName(products[i].getProductName(), name)) {
+                    return i;
                 }
             }
-            return -1; // 
+            return -1;
         }
 
         //Delete product logic
         bool removeProductByName(string productName) {
             for (int i = 0; i < count; i++) {
-                if (products[i].getProductName() == productName) {
+                if (isSameProductName(products[i].getProductName(), productName)) {
                     // Shift the rest of the array left
                     for (int j = i; j < count - 1; j++) {
                         products[j] = products[j + 1];
@@ -147,7 +181,7 @@ void addProduct(Inventory &inventory) {
 
     //Check product existence
     for (int i = 0; i < inventory.getCount(); i++) {
-        if (inventory.getProduct(i).getProductName() == name) {
+        if (isSameProductName(inventory.getProduct(i).getProductName(), name)) {
             cout << "\nProduct already exists in inventory.\n";
             return;
         }
@@ -155,25 +189,16 @@ void addProduct(Inventory &inventory) {
 
     cout << "Enter product quantity (for " << name << "): ";
     cin >> quantity;
+    cout << endl;
 
     cout << "Enter product price (for " << name << "): ";
     cin >> price;
+    cout << endl;
 
 
     Product p;
     p.setProductInformation(name, price, quantity);
     inventory.addProduct(p);
-
-    //Input checker for quantity and price
-    if (quantity < 0) {
-        cout << "Invalid quantity! Quantity cannot be negative.\n" << endl;
-        return;
-    } else if (price < 0) {
-        cout << "Invalid price! Price cannot be negative.\n" << endl;
-        return;
-    } else {
-        cout << "\nProduct added successfully!\n" << endl;
-    }
 }
 
 void updateProduct(Inventory &inventory) {
