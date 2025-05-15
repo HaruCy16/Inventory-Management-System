@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <iomanip>
 using namespace std;
 
 /*
@@ -10,6 +11,11 @@ using namespace std;
     Delete Product
     Display Inventory
     Exit Program
+
+    CLASSES - ENCAPSULATION
+    CONDITIONAL
+    INPUT OUTPUT
+    FUNCTIONS
 */
 
 // Product class (stores product details)
@@ -41,7 +47,6 @@ class Product {
         //Setters for update product
         void setQuantity(int q) { quantity = q; }
         void setPrice(double p) { price = p; }
-
 };
 
 const int MAXIMUM_PRODUCTS_TO_STORE = 100; // Maximum number of products in the inventory
@@ -68,11 +73,12 @@ class Inventory {
                 cout << "                 Product Details:                 " << endl;
                 cout << "**************************************************" << endl;
 
-                cout << "Product Name     | Quantity      | Price          " << endl;
-                for (int i = 0; i < count; i++) {
-                    cout << products[i].getProductName() << "            | " 
-                        << products[i].getProductQuantity() << "        | " 
-                        << products[i].getProductPrice() << "\n" << endl;
+                cout << left << setw(15) << "Product Name" << "|" << setw(15) << "Price" << "|" << setw(10) << "Quantity" << endl;
+                cout << "--------------------------------------------------------" << endl;
+                for (int i = 0; i < count;i++){
+                    cout << left << setw(15) << products[i].getProductName() << "|" 
+                         << setw(15) << products[i].getProductPrice() << "|" 
+                         << setw(10) << products[i].getProductQuantity() << "\n" << endl;
                 }
             } else {
                 cout << "Inventory is empty!\n" << endl;
@@ -225,6 +231,7 @@ void deleteProduct(Inventory &inventory) {
     }
 }
 
+//MAIN PROGRAM
 int main(){
     //User Introduction
     string personName;
